@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 150px;
+            background-color: #1A120B;
+        }
+        .card-header {
+            background-color: #1A120B;
+            color: #E5E5CB;
+            font-size: 1.25rem;
+        }
+        .card-body p {
+            font-size: 1.1rem;
+        }
+        .btn-secondary, .btn-primary {
+            margin-right: 10px;
+        }
+        .btn-secondary {
+            background-color: #3C2A21;
+            border-color: #3C2A21;
+        }
+        .btn-primary {
+            background-color: #1A120B;
+            border-color: #1A120B;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="{% static 'images/HomEase_logo.png' %}" alt="Logo">
+        </div>
+        <h1 class="text-center">Payment Details</h1>
+        <div class="card mt-4">
+            <div class="card-header">
+                Transaction ID: {{ payment.transaction_id }}
+            </div>
+            <div class="card-body">
+                <p><strong>Amount:</strong> {{ payment.amount }}</p>
+                <p><strong>Status:</strong> {{ payment.status }}</p>
+                <p><strong>Payment Date:</strong> {{ payment.payment_date }}</p>
+                <p><strong>User:</strong> {{ payment.username }}</p>
+                <p><strong>Apartment Number:</strong> {{ payment.apartment_number }}</p>
+                <p><strong>Housing Status:</strong> {{ payment.housing_status }}</p>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'payment_pdf' payment.id %}" class="btn btn-secondary">Download PDF</a>
+            <a href="{% url 'dummy_payment' %}" class="btn btn-primary">Back to Payments</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> userComplaint Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"/>
+
+
+
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #1A120B;
+            font-family: 'Roboto Slab', serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container-fluid {
+            display: block; 
+            margin-top: 80px;
+        }
+        .payment-status {
+            font-weight: bold;
+        }
+        
+        .payment-status.done {
+            color: green;
+        }
+        
+        .payment-status.pending {
+            color: red;
+        }
+        
+        .done-icon {
+            color: green;
+            font-size: 1.2em;
+            margin-left: 5px; /* Add space between text and icon */
+        }
+        
+        main {
+            background-color: #ffffff;
+            border-radius: 15px;
+            color: #1A120B;
+           
+            font-size: 1rem;
+          
+            width: 100%;
+            max-width: 1000px;
+        
+            margin-left:0%;
+            margin-right: 0%;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        .table thead th {
+            background-color: #3C2A21;
+            color: white;
+            border: none;
+        }
+        .table tbody tr {
+            transition: background-color 0.3s;
+        }
+        .table td, .table th {
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap; 
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        .btn-primary {
+            margin-top: 20px;
+        }
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            margin-left: 0px;
+            background-color: #3C2A21;
+            border-bottom: 1px solid #D5CEA3;
+            z-index: 1000;
+        }
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #fff;
+        }
+        .table {
+            background-color: white;
+        }
+        #logout {
+            background-color: #1A120B;
+            color: #E5E5CB;
+        }
+        .dataTables_wrapper .dataTables_scroll {
+            box-shadow: none;
+        }
+        .btn-custom {
+            background-color: #fffbf9; 
+            color: #1A120B;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            font-weight: bold;
+            position: relative;
+        }
+        .hover-text {
+            display: none;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+        .btn-custom:hover .hover-text {
+            display: inline;
+        }
+        .btn-custom .fa {
+            color: #1A120B;
+            font-size: 1.3em;
+        }
+        .btn-custom:hover {
+            background-color: #3C2A21;
+            color: #E5E5CB;
+        }
+        .badge-custom {
+            background-color: #3C2A21; /* Dark color for pending */
+            color: #D5CEA3; /* Light text color */
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .badge-success-custom {
+            background-color: #1A120B; /* Dark color for done */
+            color: #E5E5CB; /* Light text color */
+        }
+        .btn-submit-custom {
+            background-color: #1A120B; /* Change this to your desired color */
+            color: #FFFFFF; /* Text color */
+            border: none;
+            padding: 5px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 70px;
+        }
+        
+        .btn-submit-custom:hover {
+            background-color: #3C2A21; /* Darker shade for hover effect */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <h2 style="color:#fff">HOMEASE</h2>
+        <div class="ml-auto">
+            <button type="button" id="logout" class="btn btn-sm d-flex align-items-center justify-content-center">
+                <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>
+                <a class="nav-link text-light" href="/usercomplaints/" style="margin-left: 1px; font-size: 1.1em; font-weight: bold;">Back</a>
+            </button>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-12 px-md-4">
+                <h2 class="heading-margin" style="color:#3C2A21"><strong>Complaint Details</strong></h2>
+                <div class="table-responsive">
+                    <table id="complaints-table" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Contact</th>
+                                <th>Apartment Number</th>
+                                <th>Housing Status</th>
+                                <th>Category</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Image</th>
+                                <th>Action</th>
+                                <th>Payment</th>
+                         
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for Complaint in Complaint_data %}
+                            <tr>
+                                <td>{{ Complaint.username }}</td>
+                                <td>{{ Complaint.contact }}</td>
+                                <td>{{ Complaint.apartment_number }}</td>
+                                <td>{{ Complaint.housing_status }}</td>
+                                <td>{{ Complaint.category }}</td>
+                                <td>{{ Complaint.title }}</td>
+                                <td>{{ Complaint.description }}</td>
+                                <td>
+                                    {% if Complaint.image %}
+                                    <img src="{{ Complaint.image.url }}" alt="Complaint Image" style="max-width: 100px;">
+                                    {% else %}
+                                    No Image
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if Complaint.status == 'Pending' %}
+                                        <a class="btn btn-custom" data-toggle="tooltip" title="Pending">
+                                            <i class="fa fa-clock" aria-hidden="true"></i>
+                                        </a>
+                                    {% else %}
+                                        <a class="btn btn-custom" data-toggle="tooltip" title="Done">
+                                            <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                                        </a>
+                                    {% endif %}
+    
+                                    {% if Complaint.amount %}
+                                    <a href="#" class="btn btn-custom view-payment-btn" data-toggle="modal" data-target="#viewPaymentModal"
+                                        data-username="{{ Complaint.username }}"
+                                        data-contact="{{ Complaint.contact }}"
+                                        data-apartment-number="{{ Complaint.apartment_number }}"
+                                        data-housing-status="{{ Complaint.housing_status }}"
+                                        data-category="{{ Complaint.category }}"
+                                        data-title="{{ Complaint.title }}"
+                                        data-description="{{ Complaint.description }}"
+                                        data-amount="{{ Complaint.amount }}"
+                                        data-bill-image="{% if Complaint.bill_image %}{{ Complaint.bill_image.url }}{% endif %}">
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <!-- Conditional Rendering for Payment Status -->
+                                    {% if Complaint.amount %}
+                                        <span class="payment-status done">Payment Done</span>
+                                        <!-- Alternatively, you can use an icon -->
+                                        <i class="fa fa-check-circle done-icon" title="Payment Completed"></i>
+                                    {% else %}
+                                        <span class="payment-status pending">Pending Payment</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    
+    <!-- Modal Structure -->
+<div class="modal fade" id="viewPaymentModal" tabindex="-1" aria-labelledby="viewPaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewPaymentModalLabel">Payment Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Username:</strong> <span id="modal-username"></span></p>
+                <p><strong>Contact:</strong> <span id="modal-contact"></span></p>
+                <p><strong>Apartment Number:</strong> <span id="modal-apartment-number"></span></p>
+                <p><strong>Housing Status:</strong> <span id="modal-housing-status"></span></p>
+                <p><strong>Category:</strong> <span id="modal-category"></span></p>
+                <p><strong>Title:</strong> <span id="modal-title"></span></p>
+                <p><strong>Description:</strong> <span id="modal-description"></span></p>
+                <p><strong>Amount:</strong> <span id="modal-amount"></span></p>
+                <p><strong>Bill Image:</strong> <img id="modal-bill-image" src="#" alt="Bill Image" style="max-width: 100%;"></p>
+            </div>
+                <div class="form-group col-md-6">
+                    <label for="amount">Enter Amount<span style="color: red;">*</span></label>
+                    <input type="text" class="form-control" name="amount" id="modalamount" autocomplete="off" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <button type="button" class="btn-submit-custom" id="payButton">Pay</button>
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <script src="{% static 'js/adminvalidation.js' %}" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script>$('#complaints-table').DataTable({
+        "paging": true,
+        "pageLength": 10,  // Set the number of records per page
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "order": [[0, "asc"]], // Default ordering (by first column)
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+    });
+</script>
+    <script>
+        document.getElementById('payButton').addEventListener('click', function() {
+            // Display payment success message
+            alert('Payment Successful!');
+            
+            // Optional: Hide the modal after payment success
+            $('#viewPaymentModal').modal('hide');
+        });
+    </script>
+    
+    <script>
+        $('#viewPaymentModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var username = button.data('username');
+            var contact = button.data('contact');
+            var apartmentNumber = button.data('apartment-number');
+            var housingStatus = button.data('housing-status');
+            var category = button.data('category');
+            var title = button.data('title');
+            var description = button.data('description');
+            var amount = button.data('amount');
+            var billImage = button.data('bill-image');
+    
+            // Update the modal's content
+            var modal = $(this);
+            modal.find('#modal-username').text(username);
+            modal.find('#modal-contact').text(contact);
+            modal.find('#modal-apartment-number').text(apartmentNumber);
+            modal.find('#modal-housing-status').text(housingStatus);
+            modal.find('#modal-category').text(category);
+            modal.find('#modal-title').text(title);
+            modal.find('#modal-description').text(description);
+            modal.find('#modal-amount').text(amount);
+            modal.find('#modal-bill-image').attr('src', billImage);
+        });
+    </script>
+    
+</body>
+</html>

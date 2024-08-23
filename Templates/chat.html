@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbox</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid py-1">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <h3 class="mb-4">Recent Chats</h3>
+                <div class="list-group" id="request-list">
+                    <!-- User chat list will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-bottom">
+                        <h5 class="card-title text-primary mb-1" id="chatName"></h5>
+                        <p class="card-subtitle text-muted mb-0 small" id="chatEmail"></p>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="chat-window p-3" id="chat-window" style="height: 68vh; overflow-y: auto;">
+                            <!-- Chat messages will be dynamically loaded here -->
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-top">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="chatMessage" placeholder="Type a message...">
+                            <button class="btn btn-primary" type="button" id="sendChat">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Your JavaScript code here
+        let chatId = "";
+        let chatPhone = "";
+
+        // Function to fetch recent chat requests
+        function getMyRequests() {
+            $.ajax({
+                url: "{% url 'get_mentees' %}",
+                type: "GET",
+                success: function(response) {
+                    const requestList = $('#request-list');
+                    requestList.empty();
+
+                    if (response.length > 0) {
+                        response.forEach(data => {
+                            requestList.append(`
+                                <button class="list-group-item list-group-item-action d-flex align-items-center p-3 mb-2 rounded-3 shadow-sm"
+                                        onclick="getChat(${data.id}, '${data.name}', '${data.email}', '${data.phone}')">
+                                    <div class="flex-shrink-0 me-3">
+                                        <div class="avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 50px; height: 50px;">
+                                            <span class="fs-5">${data.name.charAt(0)}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5 class="mb-1">${data.name}</h5>
+                                        <p class="mb-1 small text-muted">${data.email}</p>
+                                    </div>
+                                </button>
+                            `);
+                        });
+                    } else {
+                        requestList.append('<div class="text-center text-muted">No recent chats available.</div>');
+                    }
+                }
+            });
+        }
+
+        // Function to fetch chats between users
+        function getRequestedChat(id, phone) {
+            $.ajax({
+                url: "{% url 'get_chats' %}",
+                type: "POST",
+                data: {
+                    'from_user': "{{ user.id }}{{ user.phone }}",
+                    'to_user': id + phone,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    const chatWindow = $('#chat-window');
+                    chatWindow.empty();
+
+                    if (response.length > 0) {
+                        response.forEach(data => {
+                            if (data.from_user === "{{ user.id }}{{ user.phone }}") {
+                                chatWindow.append(`
+                                    <div class="d-flex justify-content-end mb-3">
+                                        <div class="bg-primary text-white p-2 rounded-3 shadow-sm" style="max-width: 75%;">
+                                            <p class="mb-0 small">${data.chat}</p>
+                                        </div>
+                                    </div>
+                                `);
+                            } else {
+                                chatWindow.append(`
+                                    <div class="d-flex mb-3">
+                                        <div class="bg-light text-dark p-2 rounded-3 shadow-sm" style="max-width: 75%;">
+                                            <p class="mb-0 small">${data.chat}</p>
+                                        </div>
+                                    </div>
+                                `);
+                            }
+                        });
+                    } else {
+                        chatWindow.append('<div class="text-center text-muted">No messages yet.</div>');
+                    }
+                }
+            });
+        }
+
+        // Function to handle chat sending
+        function sendChat() {
+            const chatMessage = $('#chatMessage').val();
+
+            $.ajax({
+                url: "{% url 'send_chat' %}",
+                type: "POST",
+                data: {
+                    'from_user': "{{ user.id }}{{ user.phone }}",
+                    'to_user': chatId + chatPhone,
+                    'chat': chatMessage,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function() {
+                    $('#chatMessage').val('');
+                    getRequestedChat(chatId, chatPhone);
+                }
+            });
+        }
+
+        // Event listener for send chat button
+        $('#sendChat').on('click', sendChat);
+
+        // Initialize chat requests
+        $(document).ready(function() {
+            getMyRequests();
+        });
+
+        // Function to load chat details
+        function getChat(id, name, email, phone) {
+            $('#chatName').text(name);
+            $('#chatEmail').text(email);
+            chatId = id;
+            chatPhone = phone;
+            getRequestedChat(id, phone);
+        }
+    </script>
+</body>
+</html>

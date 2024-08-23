@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesign.min.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <style>
+        body {
+            background-color: #1A120B;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column; /* Added to allow stacking of navbar and login container */
+            font-family: 'Roboto Slab', serif;
+        }
+
+        .container {
+            display: flex;
+            width: 50%;
+            max-width: 800px;
+            height: 70vh;
+            background-color: #fff;
+            border-radius: 50px;
+        }
+
+        .image-box {
+            flex: 1.5; /* More space for the image */
+            background: url('{% static "images/userlogin.png" %}') no-repeat center center; /* Placeholder for your image */
+            background-size: contain; /* Ensures the image fits inside the div */
+            background-color: #fff; /* Background color to ensure visibility */
+            border-radius: 30px;
+        }
+
+        .form-box {
+            flex: 1; 
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #fff; 
+            border-radius: 30px;
+        }
+
+        .form-box h2 {
+            margin-bottom: 20px;
+            color: #1A120B;
+        }
+
+        .form-box input[type="tel"],
+        .form-box input[type="password"] {
+            width: 100%;
+            padding: 10px; /* Increased padding for larger inputs */
+            margin: 15px 0; /* Increased margin for more spacing */
+            border: 1px solid #3C2A21;
+            border-radius: 30px;
+            font-size: 16px; /* Larger font size */
+        }
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container input[type="password"] {
+            padding-right: 40px; /* Space for the eye icon */
+        }
+
+        .form-box button {
+            width: 50%;
+            padding: 15px; /* Increased padding for larger button */
+            margin-top: 20px;
+            margin-left: 50px;
+            border: none;
+            border-radius: 30px;
+            background-color: #3C2A21;
+            color: #fff;
+            font-size: 18px; /* Larger font size for button text */
+            cursor: pointer;
+        }
+
+        .form-box button:hover {
+            background-color: #D5CEA3;
+        }
+
+        .form-box .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .form-box .register-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .form-box .register-link a {
+            color: #3C2A21;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .form-box .register-link a:hover {
+            text-decoration: underline;
+        }
+       
+
+        .navbar-custom {
+            background-color: #3C2A21;
+            border-bottom: 1px solid #D5CEA3;
+            width: 100%;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #E5E5CB;
+        }
+
+        .btn-custom:hover {
+            background-color: #D5CEA3;
+        }
+
+        .icon {
+            font-size: 2rem;
+            color: #3C2A21;
+            margin-bottom: 10px;
+        }
+
+        #logout {
+            background-color: #1A120B;
+            color: #E5E5CB;
+            border-radius: 20px;
+        }
+
+        .content-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 56px); /* Adjust height to account for the navbar height */
+            width: 100%;
+        }
+
+        .btn-link{
+            color: #1A120B;  
+            font-weight: bold; 
+        }
+
+        .btn-link:hover {
+            color: #3C2A21;
+        }
+
+
+        .eye-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <h2 style="color:#E5E5CB">HOMEASE</h2>
+        <!-- <div class="ml-auto">
+            <button type="button" id="logout" class="btn btn-sm d-flex align-items-center justify-content-center">
+                <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+                <a class="nav-link text-light" href="/index/" style="margin-left: 1px; font-size: 1.1em; font-weight: bold;">Logout</a>
+            </button>
+        </div> -->
+    </nav>
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="image-box"></div> <!-- This div will contain the illustration -->
+            <div class="form-box">
+                <h2>User Login</h2>
+                <form action="/userlogin/" method="POST">
+                    {% csrf_token %}
+                    <!-- Display error messages here -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    <!-- <input type="tel" id="contact" name="contact" placeholder="Contact" required> -->
+                    <input type="tel" id="contact" name="contact" placeholder="Contact" maxlength="10" required pattern="[0-9]{10}" title="Please enter a 10-digit phone number">
+                    <div class="password-container">
+                        <input type="password" name="password" id="password" placeholder="Password"  maxlength="8" required>
+                        <i class="fas fa-eye-slash eye-icon" id="togglePassword"></i>
+                    </div>
+                    <button type="submit">Login</button>
+                </form><br>
+                <center><a href="/forgotpassword/" class="btn-link">Forgot Password?</a></center>
+                <div class="register-link">
+                    <p>You don't have an account? <a href="/userregister/">Register</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('contact').addEventListener('input', function (e) {
+            // Remove any non-digit characters
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
+    <script>
+        const passInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passInput.type === 'password' ? 'tel' : 'password';
+            passInput.type = type;
+            togglePassword.classList.toggle('fa-eye');
+            togglePassword.classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
+</html>

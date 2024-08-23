@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Dummy Payment</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesign.min.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+    <!-- Include DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+
+
+    <style>
+        body {
+            background-color: #dfd69b;
+            color: #1A120B;
+            font-family: 'Roboto Slab', serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #sidebar {
+            position: fixed;
+            top: 0px; /* Adjust based on the navbar height */
+            left: 0;
+            width: 250px; /* Adjust width as needed */
+            height: calc(100% ); /* Full height minus the navbar height */
+            background-color: #1A120B;
+           
+            overflow-y: auto;
+        }
+        #sidebar .nav-link {
+            color: #E5E5CB;
+            padding: 20px;
+        }
+        #sidebar .nav-link.active {
+            background-color: #3C2A21;
+            color: #E5E5CB;
+            border-radius: 30px;
+        }
+        #sidebar .user-info img {
+            border: 2px solid #3C2A21;
+        }
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            width: 84%;
+            margin-left: 250px;
+            background-color: #3C2A21;
+            border-bottom: 1px solid #D5CEA3;
+            z-index: 1000;
+        }
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #E5E5CB;
+        }
+        #logout {
+            background-color: #1A120B;
+            color: #E5E5CB;
+            border-radius: 20px;
+        }
+        .container {
+            background-color: #dfd69b;
+            margin-top: 70px;
+            padding-left: 100px; /* Adjusted margin-left for proper alignment */
+            padding-right: 20px;
+        }
+        .card {
+            width: 100%;
+            border-radius: 20px;
+        }
+        .btn-custom {
+            background-color: #1A120B;
+            color: #E5E5CB;
+            border-radius: 20px;
+            
+        }
+        .user-details {
+            margin-bottom: 30px;
+        }
+        .img {
+            height: 190px; /* Make the logo bigger */
+            margin-right: auto; /* Align logo to the left */
+            
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <h2 style="color:#E5E5CB">HOMEASE</h2>
+        <div class="ml-auto">
+            <button type="button" id="logout" class="btn btn-sm d-flex align-items-center justify-content-center">
+                <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+                <a class="nav-link text-light" href="/userhome/" style="margin-left: 1px; font-size: 1.1em; font-weight: bold;">Logout</a>
+            </button>
+        </div>
+    </nav> 
+
+    <!-- Sidebar -->
+    <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
+        <img src="{% static 'images/logo.png' %}" alt="Logo" class="img"> <!-- Add logo image -->
+        <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link " href="/userhome/">
+                        <i class="fa fa-user-circle" aria-hidden="true"></i>
+                        <span class="username">User Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle" data-toggle="collapse" href="#eventsDropdown" aria-expanded="false" aria-controls="eventsDropdown">
+                        <i class="fa fa-list" aria-hidden="true"></i>
+                        <span class="username">View Events</span>
+                    </a>
+                    <div class="collapse" id="eventsDropdown">
+                        <ul class="list-unstyled pl-3">
+                            <li><a class="dropdown-item" href="/userupcomingevents/" style="color: #fff;">Upcoming/Ongoing</a></li>
+                            <li><a class="dropdown-item" href="/usercompletedevents/" style="color: #fff;">Completed</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/usercomplaints/">
+                        <i class="fa fa-exclamation-circle"></i>
+                        <span class="username">Complaints</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/usergallery/">
+                        <i class="fa fa-video"></i>
+                        <span class="username">Video Gallery</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/dummy-payment/">
+                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                        <span class="username">Payments</span>
+                    </a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fa fa-file-alt" aria-hidden="true"></i>
+                        <span class="username">Report</span>
+                    </a>
+                </li> -->
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- <h1>Payment</h1> -->
+
+        {% if user_instance %}
+        <div class="row user-details">
+            <div class="col-md-6 offset-md-3">
+                <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); background: linear-gradient(135deg, #3C2A21, #ca805c); color: #fff;">
+                    <div class="card-header" style=" background: linear-gradient(135deg, #D5CEA3, #E5E5CB); border-radius: 10px 10px 0 0;">
+                        <center><b style="font-size: 1.5em; color: #3C2A21;">Payment Details</b></center>
+                    </div>
+                    <div class="card-body" >
+                        <p class="card-text" style="font-size: 1.2em; color: #ffffff;"><strong>Name:</strong> {{ user_instance.username }}</p>
+                        <p class="card-text" style="font-size: 1.2em; color: #ffffff;"><strong>Apartment Number:</strong> {{ user_instance.apartment_number }}</p>
+                        <p class="card-text" style="font-size: 1.2em; color: #ffffff;"><strong>Housing Status:</strong> {{ user_instance.housing_status }}</p>
+                        <p class="card-text" style="font-size: 1.2em; color: #ffffff;"><strong>Monthly Maintenance Amount:</strong> ₹2000</p>
+                        
+                        <form method="post" style="margin-top: 20px;">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label style="color: #ffffff;"><b>Amount Paid</b></label>
+                                <input type="number" id="amount" name="amount" required class="form-control" style="background: #D5CEA3; border: none; color: #3C2A21;">
+                            </div>
+                            <div class="form-group">
+                                <label style="color: #ffffff;"><b>UPI ID</b></label>
+                                <input type="text" name="upi_id" id="upi_id" required class="form-control" 
+                                       style="background: #D5CEA3; border: none; color: #3C2A21;">
+                            </div>
+                            <div class="form-group">
+                                <label style="color: #ffffff;"><b>UPI Password</b></label>
+                                <input type="password" name="upi_password" id="upi_password" required class="form-control" style="background: #D5CEA3; border: none; color: #3C2A21;" 
+                                pattern="\d{6}" title="UPI Password must be exactly 6 digits.">
+                            </div>
+                            
+                            <center>
+                                <button type="submit" class="btn btn-custom" style="background: #3C2A21; color: #fdfbfb; font-size: 1.2em; padding: 10px 20px; border-radius: 10px;">Pay Now</button>
+                            </center>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Payment Records</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Payment Date</th>
+                            <th>UPI Id</th>
+                            <th>History</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in user_payments %}
+                            <tr>
+                                <td>{{ payment.transaction_id }}</td>
+                                <td>{{ payment.amount }}</td>
+                                <td>{{ payment.status }}</td>
+                                <td>{{ payment.payment_date }}</td>
+                                <td>{{ payment.upi_id }}</td>
+                                <td>
+                                    <center>
+                                        <a href="{% url 'view_transaction' payment.id %}" class="btn btn-custom">View</a>
+                                    </center>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        {% else %}
+        <p>No user details available. Please log in.</p>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Include jQuery (necessary for DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include DataTables JS -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script>
+        document.getElementById('upi_password').addEventListener('input', function() {
+            const upiPassword = this.value;
+            const upiPasswordRegex = /^\d{6}$/;
+    
+            if (!upiPasswordRegex.test(upiPassword)) {
+                this.setCustomValidity("UPI Password must be exactly 6 digits.");
+            } else {
+                this.setCustomValidity("");
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.table').DataTable({
+                "pageLength": 10, // Number of rows per page
+                "searching": true, // Enable searching
+                "ordering": true, // Enable column ordering
+                "order": [[3, "desc"]], // Default ordering by payment date descending
+                "lengthChange": true, // Enable changing the number of rows displayed
+                "autoWidth": false // Disable automatic column width calculation
+            });
+        });
+    </script>
+    <script>
+        document.getElementById('upi_id').addEventListener('input', function (e) {
+            const upiPattern = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
+            const upiField = e.target;
+            if (!upiPattern.test(upiField.value)) {
+                upiField.setCustomValidity('Invalid UPI ID format. It must follow the format: name@bank.');
+            } else {
+                upiField.setCustomValidity('');
+            }
+        });
+    </script>
+    
+    
+</body>
+</html>

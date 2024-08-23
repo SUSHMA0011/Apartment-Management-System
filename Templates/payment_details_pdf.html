@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-header, .card-body {
+            padding: 15px;
+        }
+        .btn {
+            margin-top: 20px;
+        }
+        .logo img {
+            max-width: 150px;
+            background-color: #1A120B;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="{{ logo_url }}" alt="Logo">
+        </div>
+        <h1>Payment Details</h1>
+        <div class="card">
+            <div class="card-header">
+                Transaction ID: {{ payment.transaction_id }}
+            </div>
+            <div class="card-body">
+                <p><strong>Amount:</strong> {{ payment.amount }}</p>
+                <p><strong>Status:</strong> {{ payment.status }}</p>
+                <p><strong>Payment Date:</strong> {{ payment.payment_date }}</p>
+                <p><strong>User:</strong> {{ payment.username }}</p>
+                <p><strong>Apartment Number:</strong> {{ payment.apartment_number }}</p>
+                <p><strong>Housing Status:</strong> {{ payment.housing_status }}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

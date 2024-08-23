@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Events</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesign.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <style>
+        body {
+            background-color: #dfd69b;
+            color: #1A120B;
+            font-family: 'Roboto Slab', serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            width: 100%;
+          
+            background-color: #3C2A21;
+            border-bottom: 1px solid #D5CEA3;
+            z-index: 1000;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #E5E5CB;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 80px;
+            width: 800px;
+            
+        }
+        .container{
+            margin-right: 30px;
+        }
+        .form-container h1 {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .btn-custom {
+            background-color: #1A120B;
+            color: #dfd69b;;
+            border: none;
+            font-size: 1.2rem;
+            border-radius: 10px;
+        }
+        
+        
+        #logout {
+            background-color: #1A120B;
+            color: #E5E5CB;
+            
+        }
+        .h2{
+            font-weight: bold;
+        }
+        .form-control .form-control-file{
+            border-radius: 20px;
+        }
+       
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <h2 style="color:#E5E5CB">HOMEASE</h2>
+        <div class="ml-auto">
+            <button type="button" id="logout" class="btn btn-sm d-flex align-items-center justify-content-center">
+                <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>
+                <a class="nav-link text-light" href="/videogallery/" style="margin-left: 1px; font-size: 1.1em; font-weight: bold;">Back</a>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <h1 class="h2">Edit Video</h1>
+            <form method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title">Title<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ video.title}}" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description  <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="description" name="description" value="{{ video.description }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="video_file">Video file <span class="text-danger">*</span></label>
+                    <input type="file" class="form-control" id="video_file" name="video_file" value="{{ video.video_file }}" required>
+                </div>
+               
+                <div class="form-group">
+                    <label for="thumbnail">Thumbnail <span class="text-danger">*</span></label></label>
+                    <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-custom">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+    <script>
+        function validateForm() {
+            const eventName = document.getElementById('event_name').value.trim();
+            const eventDate = document.getElementById('event_date').value;
+            const eventTime = document.getElementById('event_time').value;
+            const eventDetails = document.getElementById('event_details').value.trim();
+
+            // Check if the event name is valid
+            if (eventName.length < 3 || eventName.length > 50) {
+                alert('Event name must be between 3 and 50 characters.');
+                return false;
+            }
+
+            // Check if the event date is in the future
+            const today = new Date();
+            const selectedDate = new Date(eventDate);
+            if (selectedDate < today) {
+                alert('Event date must be in the future.');
+                return false;
+            }
+
+            // Check if the event details are valid
+            if (eventDetails.length < 10 || eventDetails.length > 500) {
+                alert('Event details must be between 10 and 500 characters.');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>

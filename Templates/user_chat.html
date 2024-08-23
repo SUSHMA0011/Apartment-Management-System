@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Chat</title>
+</head>
+<body>
+    <div>
+        <h2>Chat with {{ to_user }}</h2>
+        <div id="chat-box" style="height: 80vh; overflow-y: auto;">
+            {% for chat in chats %}
+            <div class="chat-message">
+                <strong>{{ chat.from_user }}</strong>: {{ chat.chat }}
+            </div>
+            {% endfor %}
+        </div>
+        <form method="post" action="{% url 'send_chat' %}">
+            {% csrf_token %}
+            <textarea name="chat" rows="2" cols="100" placeholder="Type your message here..."></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</body>
+</html>

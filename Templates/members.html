@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesign.min.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    
+</head>
+<style>
+    body {
+        background-color: #dfd69b;
+        color: #1A120B;
+        font-family: 'Roboto Slab', serif;
+    }
+    
+    #sidebar {
+        position: fixed;
+        top: 0px; /* Adjust based on the navbar height */
+        left: 0;
+        width: 250px; /* Adjust width as needed */
+        height: calc(100% ); /* Full height minus the navbar height */
+        background-color: #1A120B;
+       
+        overflow-y: auto;
+    }
+    .img {
+        height: 190px; /* Make the logo bigger */
+        margin-right: auto; /* Align logo to the left */
+    }
+    
+    #sidebar .nav-link {
+        color: #E5E5CB;
+        padding: 18px;
+    }
+    
+    #sidebar .nav-link.active {
+        background-color: #3C2A21;
+        color: #E5E5CB;
+        border-radius: 30px;
+        
+    }
+    
+    #sidebar .user-info img {
+        border: 2px solid #3C2A21;
+    }
+    
+   
+    .navbar-custom {
+        position: fixed;
+        top: 0;
+        width: 84%;
+        margin-left: 250px;
+        background-color: #3C2A21;
+        border-bottom: 1px solid #D5CEA3;
+        z-index: 1000;
+    }
+    
+    .navbar-custom .navbar-brand,
+    .navbar-custom .nav-link {
+        color: #E5E5CB;
+    }
+
+    /* Card Styling */
+   
+    .btn-custom:hover {
+        background-color: #D5CEA3;
+    }
+    
+    .icon {
+        font-size: 2rem;
+        color: #3C2A21;
+        margin-bottom: 10px;
+    }
+
+    #logout {
+        background-color: #1A120B;
+        color: #E5E5CB;
+    }  
+     /* Dropdown Item Hover Styling */
+     .dropdown-item:hover {
+        background-color: #3C2A21;;
+        color: #1A120B;
+        border-radius: 30px;
+    } 
+    main {
+        
+        background-color: #dfd69b;
+        color: #3C2A21;
+        margin-top: 80px;
+    
+    }
+    .table-responsive {
+        margin-top: 20px;
+    }
+
+    .table thead th {
+        border-bottom: 1px solid #333;
+        background-color: #3C2A21;
+        color: white;
+        border: none;
+    }
+
+    .table tbody tr {
+        transition: background-color 0.3s;
+    }
+
+    .table td, .table th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .icon-button {
+        width: 40px;           /* Width of the square */
+        height: 40px;          /* Height of the square */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1A120B; /* Light background color */
+        border: 1px solid #ced4da; /* Border color */
+        border-radius: 5px;    /* Rounded corners */
+        font-size: 1.2em;      /* Icon size */
+        color: #ced4da;        /* Icon color */
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .icon-button:hover {
+        background-color: #e2e6ea; /* Change background on hover */
+    }
+
+    .icon-button.active {
+        background-color: #1A120B; /* Active state background color */
+        color: white;              /* Active state icon color */
+    }
+
+    .icon-button.inactive {
+        background-color: #563524; /* Inactive state background color */
+        color: white;              /* Inactive state icon color */
+    }
+
+
+
+    
+</style>
+<body class="text-light">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <h2 style="color:#E5E5CB">HOMEASE</h2>
+    <div class="ml-auto">
+        <button type="button" id="logout" class="btn btn-sm d-flex align-items-center justify-content-center">
+            <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+            <a class="nav-link text-light" href="/adminlogin/" style="margin-left: 1px; font-size: 1.1em; font-weight: bold;">Logout</a>
+        </button>
+    </div>
+</nav> 
+
+<div class="container-fluid">
+   
+    <div class="row">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="img"> <!-- Add logo image -->
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link " href="/admindash/">
+                            <i class="fa fa-user-circle" aria-hidden="true"></i>
+                            <span class="username">Admin Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/addevents/">
+                            <i class="fa fa-plus-square" aria-hidden="true"></i>
+                            <span class="username">Add Events</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link dropdown-toggle" data-toggle="collapse" href="#eventsDropdown" aria-expanded="false" aria-controls="eventsDropdown">
+                            <i class="fa fa-list" aria-hidden="true"></i>
+                            <span class="username">View Events</span>
+                        </a>
+                        <div class="collapse" id="eventsDropdown">
+                            <ul class="list-unstyled pl-3">
+                                <li><a class="dropdown-item" href="/upcomingevents/" style="color: #fff;" >Upcoming/Ongoing</a></li>
+                                <li><a class="dropdown-item" href="/completedevents/" style="color: #fff;" >Completed</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/complaints/">
+                            <i class="fa fa-exclamation-circle"></i>
+                            <span class="username">Complaints</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="/videogallery/">
+                            <i class="fa fa-video"></i>
+                            <span class="username">Video Gallery</span> 
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/members/">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            <span class="username">Members</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/flashnews/">
+                            <i class="fa fa-bullhorn" aria-hidden="true"></i>
+                            <span class="username">Flash News</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/view_payments/">
+                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                            <span class="username">Payments</span>
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fa fa-tools" aria-hidden="true"></i>
+                            <span class="username">Maintenance Request</span>
+                        </a>
+                    </li> -->
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fa fa-file-alt" aria-hidden="true"></i>
+                            <span class="username">Report</span>
+                        </a>
+                    </li> -->
+                </ul>
+            </div>
+        </nav>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 ">
+            <h2 id="view" class="heading-margin"><strong>View Members</strong></h2>
+            <div class="table-responsive">
+                <table id="users-table" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>UserName</th>
+                            <th>Contact </th>
+                            <th>Apartment Number</th>
+                            <th>Housing Status</th>
+                            <th>Password</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.contact }}</td>
+                            <td>{{ user.apartment_number}}</td>
+                            <td>{{ user.housing_status}}</td>
+                            <td>{{ user.password }}</td>
+                            <td>{{ user.is_active }}</td>
+
+                            <td style="text-align: center; vertical-align: middle;">
+                                <div style="display: inline-flex; align-items: center;">
+                                    <!-- Toggle Button Form -->
+                                    <form method="get" action="{% if user.is_active %}/inactivatebtn/{% else %}/activatebtn/{% endif %}" style="margin-right: 5px;">
+                                        <input type="hidden" name="userid" value="{{ user.id }}" />
+                                        <button class="icon-button {% if user.is_active %}active{% else %}inactive{% endif %}" type="submit">
+                                            {% if user.is_active %}
+                                                <i class="fas fa-toggle-on"></i>
+                                            {% else %}
+                                                <i class="fas fa-toggle-off"></i>
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                            
+                                    <!-- Delete Button Form -->
+                                    <form action="/deleteuser/{{ user.id }}/" method="post" style="display: inline-block"; onclick="return confirmDelete();">
+                                        {% csrf_token %}
+                                        <button type="submit" class="icon-button">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                            
+
+                            
+                                <!-- <form action="/edituser/{{ user.id }}/" method="get" style="display: inline-block;">
+                                    {% csrf_token %}
+                                    <button type="submit" style="font-size: 0.9em;" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </form> -->
+                        
+                                
+                                
+                         
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+
+
+
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+        <script>
+            function confirmDelete() {
+                return confirm('Are you sure you want to delete this user?');
+            }
+            </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                const navLinks = document.querySelectorAll('#sidebar .nav-link');
+            
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        const targetHref = this.getAttribute('href');
+                        
+                        if (targetHref.startsWith("#")) {
+                            // Internal link: Prevent default behavior and handle with JS
+                            event.preventDefault();
+            
+                            // Remove active class from all links
+                            navLinks.forEach(link => link.classList.remove('active'));
+                            // Add active class to the clicked link
+                            this.classList.add('active');
+            
+                            // Hide all content sections
+                            document.querySelectorAll('.content-section').forEach(section => {
+                                section.style.display = 'none';
+                            });
+            
+                            // Show the relevant content section
+                            const targetId = targetHref.substring(1); // Remove the '#' from the href
+                            const targetSection = document.getElementById(targetId);
+                            if (targetSection) {
+                                targetSection.style.display = 'block';
+                            }
+                        } else {
+                            // External link: Allow default behavior to load new page
+                            // Remove active class from all links
+                            navLinks.forEach(link => link.classList.remove('active'));
+                            // Add active class to the clicked link
+                            this.classList.add('active');
+                         }
+                    });
+                });
+            });
+    $(document).ready(function () {
+        $('.nav-link.dropdown-toggle').click(function (e) {
+            e.preventDefault(); // Prevent the default anchor behavior
+            
+            var $this = $(this);
+            var target = $this.attr('href'); // Get the target collapse div
+            
+            $(target).collapse('toggle'); // Toggle the collapse
+            
+            // Optional: close other dropdowns if multiple are present
+            $('.collapse').not(target).collapse('hide');
+        });
+                // Initialize DataTable
+                $('#users-table').DataTable({
+                    "lengthMenu": [5, 10, 25, 50],
+                    // You can add additional options here if needed
+                });
+            });
+        
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const section = "{{ section }}";
+        if (section) {
+            const sectionElement = document.getElementById(section);
+            if (sectionElement) {
+                sectionElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+</script>
+
+    
+</body>
+</html>

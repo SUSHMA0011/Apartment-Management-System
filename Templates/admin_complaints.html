@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaints for Apartment {{ apartment_number }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+    
+
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #1A120B;
+            font-family: 'Roboto Slab', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #3C2A21;
+            border-bottom: 1px solid #D5CEA3;
+            z-index: 1000;
+        }
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #E5E5CB;
+        }
+        #logout {
+            background-color: #1A120B;
+            color: #E5E5CB;
+        }
+        .container {
+           
+            color: #1A120B;
+            margin-bottom: 30px;
+            margin-top: 10px;
+            padding-top:1px;
+            width: 100%;
+            max-width: 1400px;
+            
+            border-radius: 10px;
+        }
+        #table{
+            background-color: #ffffff;
+          
+        }
+        #table thead th {
+            background-color: #3C2A21;
+            color: #E5E5CB;
+        }
+        .btn-custom {
+            background-color: #fffbf9; 
+            color: #1A120B;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            font-weight: bold;
+            position: relative;
+        }
+        .hover-text {
+            display: none;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+        .btn-custom:hover .hover-text {
+            display: inline;
+        }
+        .btn-custom .fa {
+            color: #1A120B;
+            font-size: 1.3em;
+        }
+        .btn-custom:hover {
+            background-color: #3C2A21;
+            color: #E5E5CB;
+        }
+        .btn-custom .badge {
+            background-color: #1A120B;
+            color: #E5E5CB;
+            padding: 5px 10px;
+            font-size: 1em;
+            border-radius: 5px;
+        }
+        .btn-custom .badge i {
+            margin-right: 5px;
+        }
+        
+        .modal-content {
+            background-color: #ffffff;
+            color: #1A120B;
+        }
+        .modal-header {
+            border-bottom: 1px solid #D5CEA3;
+        }
+        .modal-footer {
+            border-top: 1px solid #D5CEA3;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-submit-custom {
+            background-color: #1A120B; /* Change this to your desired color */
+            color: #FFFFFF; /* Text color */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .btn-submit-custom:hover {
+            background-color: #3C2A21; /* Darker shade for hover effect */
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <h2 style="color:#E5E5CB">HOMEASE</h2>
+        <div class="ml-auto">
+            <button type="button" id="logout" class="btn btn-sm d-flex align-items-center justify-content-center">
+                <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>
+                <a class="nav-link text-light" href="/complaints/" style="margin-left: 1px; font-size: 1.1em; font-weight: bold;">Back</a>
+            </button>
+        </div>
+    </nav>
+
+    <h2 style="color: #161403;"><b>Complaints for Apartment {{ apartment_number }}</b></h2>
+    <div class="container">
+        
+        <table id="table" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Contact</th>
+                    <th>Category</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Image</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for complaint in complaints %}
+                    <tr>
+                        <td>{{ complaint.username }}</td>
+                        <td>{{ complaint.contact }}</td>
+                        <td>{{ complaint.category }}</td>
+                        <td>{{ complaint.title }}</td>
+                        <td>{{ complaint.description }}</td>
+                        <td>
+                            {% if complaint.image %}
+                                <img src="{{ complaint.image.url }}" alt="Complaint Image" width="100">
+                            {% else %}
+                                No Image
+                            {% endif %}
+                        </td>
+                        <td>{{ complaint.created_at }}</td>
+                        <td>
+                            {% if complaint.status == 'Pending' %}
+                            <a href="{% url 'mark_as_done' complaint.id %}" class="btn btn-custom" data-toggle="tooltip" title="Mark as done">
+                                <i class="fa fa-clipboard-check" aria-hidden="true"></i>
+                            </a>
+                            {% else %}
+                            <a class="btn btn-custom" data-toggle="tooltip" title="Done">
+                                <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                            </a>
+                            {% endif %}
+                            <a href="#" class="btn btn-custom" data-toggle="modal" data-target="#feeModal" 
+                            onclick="loadFeeDetails('{{ complaint.id }}', '{{ complaint.username }}', '{{ complaint.contact }}', '{{ complaint.category }}', '{{ complaint.title }}', '{{ complaint.description }}', '{% if complaint.image %}{{ complaint.image.url }}{% else %}{% endif %}')">
+                            <i class="fa fa-money-check-alt"></i>
+                         </a>
+                         
+
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+   <!-- Fee Modal -->
+<div class="modal fade" id="feeModal" tabindex="-1" role="dialog" aria-labelledby="feeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="feeModalLabel">Fee Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="feeForm" action="" method="post" enctype="multipart/form-data">
+
+                    {% csrf_token %}
+                    <input type="hidden" name="complaint_id" id="modalComplaintId">
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="name">User Name<span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" name="name" id="modalUsername" autocomplete="off" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="model">Contact<span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" name="model" id="modalContact" autocomplete="off" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="vnumber">Category<span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" name="vnumber" id="modalCategory" autocomplete="off" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="cnumber">Title<span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" name="cnumber" id="modalTitle" autocomplete="off" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="cnumber">Description<span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" name="cnumber" id="modalDescription" autocomplete="off" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="modalImage">Image<span style="color: red;">*</span></label>
+                            <img src="" alt="Complaint Image" width="100" id="modalImage" style="display: none;">
+                            <p id="noImageText" style="display: none;">No Image</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="amount">Enter Amount<span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" name="amount" id="modalamount" autocomplete="off" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="bill_image">Bill Image </label>
+                            <input type="file" class="form-control-file" id="bill_image" name="bill_image" accept="image/*">
+                        </div>
+                    </div>
+                 
+                    <button type="submit" class="btn-submit-custom">Submit</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    
+    
+    
+
+   
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+
+
+    <script>
+        function loadFeeDetails(id, username, contact, category, title, description, image) {
+            document.getElementById('modalComplaintId').value = id;
+            document.getElementById('modalUsername').value = username;
+            document.getElementById('modalContact').value = contact;
+            document.getElementById('modalCategory').value = category;
+            document.getElementById('modalTitle').value = title;
+            document.getElementById('modalDescription').value = description;
+            
+            var modalImage = document.getElementById('modalImage');
+            var noImageText = document.getElementById('noImageText');
+            
+            if (image) {
+                modalImage.src = image;
+                modalImage.style.display = 'block';
+                noImageText.style.display = 'none';
+            } else {
+                modalImage.style.display = 'none';
+                noImageText.style.display = 'block';
+            }
+            
+         
+        }
+        
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#table').DataTable({
+                "pagingType": "full_numbers",
+                "lengthMenu": [5, 10, 25, 50],
+                "pageLength": 5,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true
+            });
+        
+            $('[data-toggle="tooltip"]').tooltip();
+
+        });
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Chat</title>
+</head>
+<body>
+    <div style="display: flex;">
+        <div style="width: 25%; height: 90vh; overflow-y: auto;">
+            <h3>Users</h3>
+            <ul>
+                {% for user in users %}
+                    <li><a href="?user={{ user.contact }}">{{ user.username }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div style="width: 75%; padding: 20px;">
+            {% if selected_user %}
+                <h2>Chat with {{ selected_user }}</h2>
+                <div id="chat-box" style="height: 80vh; overflow-y: auto;">
+                    {% for chat in chats %}
+                        <p><strong>{{ chat.from_user }}:</strong> {{ chat.chat }}</p>
+                    {% endfor %}
+                </div>
+                <form method="post" action="{% url 'send_chat' %}">
+                    {% csrf_token %}
+                    <textarea name="chat" rows="2" cols="100" placeholder="Type your message here..."></textarea>
+                    <button type="submit">Send</button>
+                </form>
+            {% else %}
+                <p>Select a user to start chatting.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

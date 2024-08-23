@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Register</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            background-color: #1A120B; /* Light background color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column; /* Added to allow stacking of navbar and login container */
+            font-family: 'Roboto Slab', serif;
+        }
+
+        .container {
+            display: flex;
+            width: 60%; /* More space for the container */
+            max-width: 1200px; /* Maximum width for larger screens */
+            height: 70vh; /* Occupies 80% of the viewport height */
+            background-color: #fff; 
+            border-radius: 50px;
+            margin-top: 60px;
+            
+        }
+
+        .image-box {
+            flex: 1.6; /* More space for the image */
+            background: url('{% static "images/userregister.png" %}') no-repeat center center; /* Placeholder for your image */
+            background-size: contain; /* Ensures the image fits inside the div */
+            background-color: #fff; /* Background color to ensure visibility */
+            border-radius: 30px;
+        }
+
+        .form-box {
+            flex: 1.5; 
+            padding-right: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #fff; 
+            border-radius: 30px;
+        }
+
+        .form-box h2 {
+            margin-bottom: 20px;
+            color: #1A120B;
+        }
+
+        .form-box .form-row {
+            margin-bottom: 15px;
+        }
+
+        .form-box input[type="text"],
+        .form-box input[type="tel"],
+        .form-box input[type="password"],
+        .form-box select {
+            width: 100%;
+            padding: 10px; /* Increased padding for larger inputs */
+            border: 1px solid #3C2A21;
+            border-radius: 30px;
+            font-size: 16px; /* Larger font size */
+        }
+
+        .form-box button {
+            width: 30%;
+            padding: 15px; /* Increased padding for larger button */
+            margin-top: 10px;
+            margin-left: 150px;
+            border: none;
+            border-radius: 30px;
+            background-color: #3C2A21;
+            color: #fff;
+            font-size: 18px; /* Larger font size for button text */
+            cursor: pointer;
+        }
+
+        .form-box button:hover {
+            background-color: #D5CEA3;
+        }
+
+        .form-box .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .navbar-custom {
+            background-color: #3C2A21;
+            border-bottom: 1px solid #D5CEA3;
+            width: 100%;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #E5E5CB;
+        }
+
+        .btn-custom:hover {
+            background-color: #D5CEA3;
+        }
+
+        .icon {
+            font-size: 2rem;
+            color: #3C2A21;
+            margin-bottom: 10px;
+        }
+
+        #logout {
+            background-color: #1A120B;
+            color: #E5E5CB;
+        }
+        .form-box .register-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .form-box .register-link a {
+            color: #1A120B;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .form-box .register-link a:hover {
+            text-decoration: underline;
+        }
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container input[type="password"] {
+            padding-right: 40px;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <h2 style="color:#E5E5CB">HOMEASE</h2>
+        <div class="ml-auto">
+            <button type="button" id="logout" class="btn btn-sm d-flex align-items-center justify-content-center">
+                <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+                <a class="nav-link text-light" href="/adminlogin/" style="margin-left: 1px; font-size: 1.1em; font-weight: bold;">Logout</a>
+            </button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="image-box"></div> <!-- This div will contain the illustration -->
+        <div class="form-box">
+            <h2>User Register</h2>
+            <form action="/savenewuser/" method="POST" onsubmit="return validatePassword()">
+                {% csrf_token %}
+                {% if messages %}
+                    <div>
+                        {% for message in messages %}
+                            <p class="error-message">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="form-row">
+                    <div class="col">
+                        <input type="text" id="username" name="username" placeholder="Username"  required>
+                    </div>
+                    <div class="col">
+                        <input type="tel" id="contact" name="contact" placeholder="Contact" maxlength="10" required pattern="[0-9]{10}" title="Please enter a 10-digit phone number">
+                    </div>
+                    
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <select id="apartment_number" name="apartment_number" required>
+                            <option value="" disabled selected>Apartment Number</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select id="housing_status" name="housing_status" required>
+                            <option value="" disabled selected>Housing Status</option>
+                            <option value="own">Own</option>
+                            <option value="rent">Rent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col position-relative">
+                        <input type="password" id="password" name="password" placeholder="Password" maxlength="8" required>
+                        <i class="fa fa-eye-slash eye-icon" id="togglePassword"></i>
+                    </div>
+                    <div class="col position-relative">
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" maxlength="8" required>
+                        <i class="fa fa-eye-slash eye-icon" id="toggleConfirmPassword"></i>
+                    </div>
+                </div>
+                <div class="password-error" id="passwordError">
+                    Password must be 8 characters long and include at least one uppercase letter, one lowercase letter, and one digit.
+                </div>
+                <button type="submit">Register</button>
+            </form>
+            <div class="register-link">
+                <p>You already have an account? <a href="/userlogin/">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+    document.getElementById('contact').addEventListener('input', function (e) {
+        // Remove any non-digit characters
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+</script>
+<script>
+    const passInput = document.getElementById('password');
+    const confirmPassInput = document.getElementById('confirm_password');
+    const togglePassword = document.getElementById('togglePassword');
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passInput.type === 'password' ? 'text' : 'password';
+        passInput.type = type;
+        togglePassword.classList.toggle('fa-eye');
+        togglePassword.classList.toggle('fa-eye-slash');
+    });
+
+    toggleConfirmPassword.addEventListener('click', function () {
+        const type = confirmPassInput.type === 'password' ? 'text' : 'password';
+        confirmPassInput.type = type;
+        toggleConfirmPassword.classList.toggle('fa-eye');
+        toggleConfirmPassword.classList.toggle('fa-eye-slash');
+    });
+    function validatePassword() {
+        const password = passInput.value;
+        const passwordError = document.getElementById('passwordError');
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8}$/;
+
+        if (!passwordRegex.test(password)) {
+            passwordError.style.display = 'block';
+            return false;
+        } else {
+            passwordError.style.display = 'none';
+            return true;
+        }
+    }
+</script>
+
+    
+</body>
+</html>
